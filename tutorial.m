@@ -43,5 +43,10 @@ Kxtest = gaussK(Xtest * u, 'median', []);
 Kytest = centralizedK(gaussK(Ytest * v, 'median', []));
 hsic_test = f(Kxtest,Kytest);
 
+% test centered 
+Kxtest = centralizedK(gaussK(Xtest * u, 'median', []));
+Kytest = centralizedK(gaussK(Ytest * v, 'median', []));
+hsic_test_centered = f(Kxtest,Kytest);
+
 
 
