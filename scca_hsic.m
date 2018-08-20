@@ -113,12 +113,19 @@ if ~exist('r2', 'var') || isempty(r2)
     end
 end
 
+% partition into training and validation sets
+[~,indices] = partition(size(X,1), 3);
+train = indices ~= 1;
+test = indices == 1;
+Xtrain = X(train,:); Xtest = X(test,:);
+Ytrain = Y(train,:); Ytest = Y(test,:);
 
-Xm = X;
-Ym = Y;
+Xm = Xtrain;
+Ym = Ytrain;
 N = size(Xm,1);
 dx = size(Xm,2);
 dy = size(Ym,2);
+
 
 maxit = 500;
 if size(Xm,1) == size(Ym,1)
@@ -319,9 +326,20 @@ for m=1:M
             InterMediate(m,rep).obj(2*ite) = obj;
             
             %line search end
-            diff = abs(obj-obj_old)./abs(obj+obj_old);
-            
+            %diff = abs(obj-obj_old) / (abs(obj+obj_old)/2);
+            %diff = abs(obj-obj_old) / ((abs(obj)+abs(obj_old))/2);
             %disp(['iter = ',num2str(ite),', objtr = ',num2str(obj), ', diff = ', num2str(diff)])
+            
+            % Check here the value of test objective
+            Kxtest = gaussK(Xtest * umr, 'median', []);
+            Kytest = centralizedK(gaussK(Ytest * vmr, 'median', []));
+            test_obj = f(Kxtest,Kytest);
+            
+            diff = abs(obj - obj_old) / abs(obj + obj_old);            
+            
+            disp(['iter = ',num2str(ite),', objtr = ',num2str(obj),...
+                ', diff = ', num2str(diff), ...
+                ', test = ', num2str(test_obj)])
         end
         InterMediate(m,rep).Result.u = umr;
         InterMediate(m,rep).Result.v = vmr;

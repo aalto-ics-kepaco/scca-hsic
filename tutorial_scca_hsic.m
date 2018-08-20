@@ -24,9 +24,9 @@ Ytrain = Y(train,:); Ytest = Y(test,:);
 hyperparams.M = 1;
 hyperparams.normtypeX = 1;
 hyperparams.normtypeY = 1;
-hyperparams.Cx = 1;
-hyperparams.Cy = 1;
-hyperparams.Rep = 10;
+hyperparams.Cx = 10;
+hyperparams.Cy = 10;
+hyperparams.Rep = 5;
 hyperparams.eps = 1e-6;
 hyperparams.type1 = 'Gaussian';
 hyperparams.sigma1 = [];
@@ -43,10 +43,6 @@ Kxtest = gaussK(Xtest * u, 'median', []);
 Kytest = centralizedK(gaussK(Ytest * v, 'median', []));
 hsic_test = f(Kxtest,Kytest);
 
-% test centered 
-Kxtest = centralizedK(gaussK(Xtest * u, 'median', []));
-Kytest = centralizedK(gaussK(Ytest * v, 'median', []));
-hsic_test_centered = f(Kxtest,Kytest);
 
 
 

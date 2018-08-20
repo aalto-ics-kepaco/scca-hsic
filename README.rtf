@@ -1,0 +1,42 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fnil\fcharset0 Tahoma;}
+{\colortbl;\red255\green255\blue255;\red35\green35\blue35;\red255\green255\blue255;\red35\green35\blue35;
+\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c18039\c18039\c18039;\cssrgb\c100000\c100000\c100000;\cssrgb\c18039\c18039\c18039;
+\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww17960\viewh13160\viewkind0
+\deftab720
+\pard\pardeftab720\sl340\partightenfactor0
+
+\f0\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 This folder contains the MATLAB implementation of the sparse non-linear CCA through Hilbert-Schmidt Independence Criterion (SCCA-HSIC).\
+\
+
+\f1 The contents are as follows.\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf2 centralizedK.m				function for centering the unapproximated kernels, applied in scca_hsic\
+centre_nystrom_kernel.m		function for centering the Nystr\'f6m approximated Gaussian kernel, applied in scca_hsic_nystrom\
+f_nystrom.m					the objective function of Nystr\'f6m HSIC (scca_hsic_nystrom)\
+f.m							the objective function of HSIC (scca_hsic)\
+gaussK.m					function for generating a Gaussian kernel matrix\
+generate_data.m				function for generating simulated data\
+gradf_gauss_SGD.m			the gradient of the objective when Gaussian kernel is applied, computed from a stochastic mini batch\
+gradf_gauss.m				\cf4 \cb5 \outl0\strokewidth0 the gradient of the objective when Gaussian kernel is applied, computed from a full batch\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+gradf_poly_SGD.m			\cf4 \cb5 \outl0\strokewidth0 the gradient of the objective when polynomial kernel is applied, computed from a stochastic mini batch\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+gradf_tanh_SGD.m			\cf4 \cb5 \outl0\strokewidth0 the gradient of the objective when sigmoid kernel is applied, computed from a stochastic mini batch\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+partition.m					function for partitioning the data points to training and test sets\
+polyK.m						\cf4 \cb5 \outl0\strokewidth0 function for generating a polynomial kernel matrix\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+projL1.m						projects a vector onto an L1 norm ball\
+projL2.m						\cf4 \cb5 \outl0\strokewidth0 projects a vector onto an L2 norm ball\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+rbf_approx.m					\cf4 \cb5 \outl0\strokewidth0 function for generating a Nystr\'f6m approximated Gaussian kernel matrix\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+scca_hsic_nystrom.m			the optimisation algorithm with the Nystr\'f6m approximation\
+scca_hsic.m					t\cf4 \cb5 \outl0\strokewidth0 he optimisation algorithm (without the Nystr\'f6m approximation)\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+sqdist.m						compute distances between data points (fast)\
+tanhK.m						\cf4 \cb5 \outl0\strokewidth0 function for generating a polynomial kernel matrix\cf2 \cb3 \outl0\strokewidth0 \strokec2 \
+tutorial_scca_hsic_nystrom.m	an example script to run scca_hsic_nystrom\
+tutorial.m					\cf4 \cb5 \outl0\strokewidth0 an example script to run scca_hsic\
+\
+For sample sizes greater than 1000 scca_hsic_nystrom is recommended. For sample sizes less than 1000, scca_hsic works fine.\
+\
+It is a good idea to check the convergence of the restarts as is demonstrated in tutorial_scca_hsic_nystrom. }

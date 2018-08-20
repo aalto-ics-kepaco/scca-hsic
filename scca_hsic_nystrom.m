@@ -142,7 +142,7 @@ for m = 1:M % for every component
                     phicu = phicu_new;
                 else
                     gamma = gamma/2;
-                    if gamma < 1e-6
+                    if gamma < 1e-8
                         chk = 0;
                     end
                 end
@@ -194,7 +194,7 @@ for m = 1:M % for every component
                     obj = obj_new;
                 else
                     gamma = gamma/2;
-                    if gamma < 1e-6
+                    if gamma < 1e-8
                         chk = 0;
                     end
                 end
