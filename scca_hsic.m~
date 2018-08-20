@@ -128,7 +128,8 @@ dy = size(Ym,2);
 
 
 maxit = 500;
-if size(Xm,1) ~= size(Ym,1)
+if size(Xm,1) == size(Ym,1)
+else
     printf('size of data matrix are not same');
 end
 
@@ -178,6 +179,7 @@ for m=1:M
                     [Kv,av] = gaussK(Yv,'none',sigma2);
                 else 
                     [Kv,av] = gaussK(Yv,'median',sigma2);
+                    %av
                 end
             case 'Polynomial'
                 if sigma2>=0
@@ -200,11 +202,15 @@ for m=1:M
         while diff > eps && ite < maxit
             ite = ite+1;
             %fprintf('Iter: #%d \n',ite);
-                
+            
+            
             obj_old = f(Ku,cKv); % objective at current values
             %save gradvar.mat Ku cKv Xm au umr
             switch type1
-                case 'Gaussian'                
+                case 'Gaussian'
+                    %all(isnan(Ku))
+                    %all(isnan(cKv))
+                   
                     gradu = gradf_gauss_SGD(Ku,cKv,Xm,au,umr); % gradient at current values
                 case 'Polynomial'
                     gradu = gradf_poly_SGD(Ku,cKv,Xm,au,umr,r1);
@@ -250,7 +256,7 @@ for m=1:M
                     obj = obj_new;
                 else
                     gamma = gamma/2;
-                    if gamma <1e-7
+                    if gamma <1e-6
                         chk=0;
                         
                     end
