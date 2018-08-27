@@ -2,7 +2,7 @@
 clear
 
 % generate data
-n = 300;
+n = 500;
 p = 20;
 q = 20;
 numx = 2;
@@ -27,7 +27,7 @@ hyperparams.normtypeY = 1;
 hyperparams.Cx = 10;
 hyperparams.Cy = 10;
 hyperparams.Rep = 5;
-hyperparams.eps = 1e-6;
+hyperparams.eps = 1e-7;
 hyperparams.type1 = 'Gaussian';
 hyperparams.sigma1 = [];
 hyperparams.type2 = 'Gaussian';

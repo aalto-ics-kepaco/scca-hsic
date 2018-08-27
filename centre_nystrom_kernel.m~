@@ -1,13 +1,9 @@
-function obj = f(Kx,cKy)
+function [phic] = centre_nystrom_kernel(phi)
 
-% The HSIC objective
+% This function centres the approximated kernel matrix.
 
-% Input    
-% Kx:   uncentred kernel matrix of view x
-% cKy:  centred kernel matrix of view y
-
-% Output
-% obj:  value of HSIC
+% input:
+%       phi
 
 %--------------------------------------------------------------------------
 % Uurtio, V., Bhadra, S., Rousu, J. 
@@ -15,8 +11,8 @@ function obj = f(Kx,cKy)
 % IEEE International Conference on Data Mining (ICDM 2018)
 %--------------------------------------------------------------------------
 
-N = size(Kx,1);
-obj = trace(Kx*cKy)/(N-1)^2;
+phic = (eye(size(phi,1)) - 1 / size(phi,1) * ones(size(phi,1))) * phi;
 
 
 end
+

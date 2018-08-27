@@ -2,12 +2,8 @@ function obj = f(Kx,cKy)
 
 % The HSIC objective
 
-% Input    
-% Kx:   uncentred kernel matrix of view x
-% cKy:  centred kernel matrix of view y
+% Input 
 
-% Output
-% obj:  value of HSIC
 
 %--------------------------------------------------------------------------
 % Uurtio, V., Bhadra, S., Rousu, J. 
