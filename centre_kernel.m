@@ -1,9 +1,11 @@
-function obj = f(Kx,cKy)
+function K = centre_kernel(K)
 
-% The HSIC objective
+% This function centres the kernel matrix.
 
-% Input 
-
+% Input
+%       K: uncentred kernel matrix
+% Output
+%       phic: centred kernel matrix
 
 %--------------------------------------------------------------------------
 % Uurtio, V., Bhadra, S., Rousu, J. 
@@ -11,8 +13,7 @@ function obj = f(Kx,cKy)
 % IEEE International Conference on Data Mining (ICDM 2018)
 %--------------------------------------------------------------------------
 
-N = size(Kx,1);
-obj = trace(Kx*cKy)/(N-1)^2;
-
+K = K + mean(K(:)) - ...
+    (repmat(mean(K,1),[size(K,1),1])+repmat(mean(K,2),[1,size(K,2)]));
 
 end

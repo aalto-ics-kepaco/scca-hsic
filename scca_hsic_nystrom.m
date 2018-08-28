@@ -1,23 +1,34 @@
 function [U,V,final_obj,tempobj,InterMediate] = scca_hsic_nystrom(X,Y,hyperparams)
-%% This function will solve max u'X'Yv s.t. ||u||_1 =1 and ||v||_2=1
-%% Input :
-% X is n x dx data matrix (Assue that data matrices)
-% Y is n x dy data matrix
-% M is number of factor required
-% normtypeX is norm used for X view 1= l1 norm (default) and 2 = l2 norm
-% normtypeY is norm used for Y view 1= l1 norm  and 2 = l2 norm (default)
-% App_para is the number of columns we considered in approximated kernel
-% Rep is number of repeats with dfferent initital point for each components
-% eps convergence threshold
-% sigma1 is parameters for kernels for X view [width or degree, if sigma1= 0 for gaussian kernel then use median, if sigma1= 0 for polynomial kernel then model use linear kernel ]
-% sigma2 is parameters for kernels for Y view [width or degree, if sigma2= 0 for gaussian kernel then use median, if sigma2= 0 for polynomial kernel then model use linear kernel ]
-%
-%% Output:
-% U and V are output CCA components
-% InterMediate All intermediate results
-% InterMediate(m,rep).u  contains all intermediate u for mth Canonical component and rep intial sart.
-% InterMediate(m,rep).v  contains all intermediate v for mth Canonical component and rep intial sart.
-% InterMEdiate(m,rep).obj contains intermediate objective values for each iteration for m th component and rep intial start.
+
+% The Nystrom approximated SCCA-HSIC implementation using the projected 
+% stochastic mini-batch gradient ascent. 
+
+% Input:
+% X             n x dx data matrix 
+% Y             n x dy data matrix
+% M             number of components
+% normtypeX 	norm for X view 1 = l1 norm (default) and 2 = l2 norm
+% normtypeY 	norm for Y view 1 = l1 norm and 2 = l2 norm (default)
+% Rep           number of repetitions from random initializations
+% eps           convergence threshold
+% sigma1        the std of the rbf kernel, if empty = median heuristic
+% sigma2        the std of the rbf kernel, if empty = median heuristic
+
+% Output:
+% U             canonical coefficient vectors for X in the columns of U
+% V             canonical coefficient vectors for Y in the columns of V 
+
+% InterMediate is a structure containing all intermediate results
+% InterMediate(m,rep).u  contains all intermediate u for mth component
+% InterMediate(m,rep).v  contains all intermediate v for mth component
+% InterMEdiate(m,rep).obj contains intermediate objective values
+
+
+%--------------------------------------------------------------------------
+% Uurtio, V., Bhadra, S., Rousu, J. 
+% Sparse Non-Linear CCA through Hilbert-Schmidt Independence Criterion. 
+% IEEE International Conference on Data Mining (ICDM 2018)
+%--------------------------------------------------------------------------
 
 %% Set up parameters
 
@@ -53,7 +64,7 @@ for m = 1:M % for every component
     for rep = 1:Rep % rep times
         fprintf('Reps: #%d \n',rep);
         
-        % initialise the u and v
+        % initialize the u and v
         if normtypeX==1
             umr = projL1(rand(dx,1),Cx);
         end
@@ -69,8 +80,6 @@ for m = 1:M % for every component
         
         % random sampling
         ind = randperm(N, Nnym);
-        %[~, ind, ~] = kmedoids(Xm', Nnym);
-        %ind = find_centroids(Xm,Nnym);
         
         % compute the approximated kernel
         if sigma1 > 0
@@ -86,8 +95,7 @@ for m = 1:M % for every component
             [phiv, av] = rbf_approx(Ym * vmr, ind);
         end
         Kv = phiv' * phiv;
-                
-        
+                        
         % centre the kernels
         [phicu] = centre_nystrom_kernel(phiu);
         cKu = phicu' * phicu;
@@ -205,8 +213,8 @@ for m = 1:M % for every component
             % LINE SEARCH END
             
             % Check here the value of test objective
-            Kxtest = gaussK(Xtest * umr, 'median', []);
-            Kytest = centralizedK(gaussK(Ytest * vmr, 'median', []));
+            Kxtest = rbf_kernel(Xtest * umr);
+            Kytest = centre_kernel(rbf_kernel(Ytest * vmr));
             test_obj = f(Kxtest,Kytest);
             
             diff = abs(obj - obj_old) / abs(obj + obj_old);            
