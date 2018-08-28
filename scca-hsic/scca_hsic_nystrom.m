@@ -42,6 +42,7 @@ Rep = hyperparams.Rep;
 eps = hyperparams.eps;
 sigma1 = hyperparams.sigma1;
 sigma2 = hyperparams.sigma2;
+grad = hyperparams.grad;
 maxit = hyperparams.maxit;
 
 % partition into training and validation sets
@@ -110,7 +111,12 @@ for m = 1:M % for every component
             obj = obj_old;
             
             % GRADIENT WRT U
-            gradu = gradf_gauss_SGD(Ku ,cKv ,Xm(ind,:), au ,umr);
+            switch grad
+                case 'minibatch'
+                    gradu = gradf_gauss_SGD(Ku ,cKv ,Xm(ind,:), au ,umr);
+                case 'batch'
+                    gradu = gradf_gauss(Ku ,cKv ,Xm(ind,:), au ,umr);
+            end
            
             % LINE SEARCH FOR U
             gamma = norm(gradu,2);
@@ -157,7 +163,12 @@ for m = 1:M % for every component
            
             obj_old = obj;
             % GRADIENT WRT V
-            gradv = gradf_gauss_SGD(Kv,cKu,Ym(ind,:),av,vmr);
+            switch grad
+                case 'minibatch'
+                    gradv = gradf_gauss_SGD(Kv,cKu,Ym(ind,:),av,vmr);
+                case 'batch'
+                    gradv = gradf_gauss(Kv,cKu,Ym(ind,:),av,vmr);
+            end
             
             % LINE SEARCH FOR V
             gamma = norm(gradv, 2);

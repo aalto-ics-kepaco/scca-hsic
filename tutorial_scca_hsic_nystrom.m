@@ -2,7 +2,7 @@
 clear
 
 % generate data
-n = 10000; % sample size
+n = 5000; % sample size
 p = 20; % dimensionality of X
 q = 20; % dimensionality of Y
 numx = 2; % number of related variables from X view (2 in Y by default)
@@ -27,11 +27,11 @@ Ytrain = Y(train,:); Ytest = Y(test,:);
 hyperparams.M = 1; % number of components/relations
 hyperparams.normtypeX = 1; % the norm on X view
 hyperparams.normtypeY = 1; % the norm on Y view
-hyperparams.App_para = 0.01; % percentage of inducing variables for Nyström
+hyperparams.App_para = 0.1; % percentage of inducing variables for Nyström
 hyperparams.Cx = 1; % the value of the norm on X view
 hyperparams.Cy = 1; % the value of the norm on Y view
 hyperparams.Rep = 3; % number of restarts of the algorithm
-hyperparams.eps = 1e-6; % stopping criterion
+hyperparams.eps = 1e-8; % stopping criterion
 hyperparams.sigma1 = []; % std of Gaussian kernel on X view
 hyperparams.sigma2 = []; % std of Gaussian kernel on Y view
 hyperparams.grad = 'minibatch'; % type of gradient
@@ -41,13 +41,10 @@ hyperparams.maxit = 30; % maximum number of iterations
 
 [u,v,hsic_train,tempobj,InterMediate] = scca_hsic_nystrom(Xtrain,Ytrain,hyperparams);
 
-%%
-[u,v,hsic_train,tempobj,InterMediate] = scca_hsic(Xtrain,Ytrain,hyperparams);
-
 %% test the scca-hsic model
 
-Kxtest = gaussK(Xtest * u, 'median', []);
-Kytest = centralizedK(gaussK(Ytest * v, 'median', []));
+Kxtest = rbf_kernel(Xtest * u);
+Kytest = centre_kernel(rbf_kernel(Ytest * v));
 hsic_test = f(Kxtest,Kytest);
 
 %% Example visualisations
