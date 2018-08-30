@@ -3,10 +3,6 @@ paper
 
 "Sparse Non-Linear CCA through Hilbert-Schmidt Independence Criterion".
 
-"Uurtio, V., Bhadra, S., Rousu, J. Sparse Non-Linear CCA through Hilbert-Schmidt
-Independence Criterion. IEEE International Conference on Data Mining 
-(ICDM 2018), to appear".
-
 The scca-hsic folder contains the implementation of SCCA-HSIC and its Nyström 
 approximated variant.
 
@@ -17,3 +13,7 @@ included.
 
 The tutorial folder contains example scripts to get acquainted with SCCA-HSIC.
 
+
+"Uurtio, V., Bhadra, S., Rousu, J. Sparse Non-Linear CCA through Hilbert-Schmidt
+Independence Criterion. IEEE International Conference on Data Mining 
+(ICDM 2018), to appear".
