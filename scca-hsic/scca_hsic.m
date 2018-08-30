@@ -6,13 +6,19 @@ function [U,V,final_obj,tempobj,InterMediate] = scca_hsic(X,Y,hyperparams)
 % Input:
 % X             n x dx data matrix 
 % Y             n x dy data matrix
-% M             number of components
-% normtypeX 	norm for X view 1 = l1 norm (default) and 2 = l2 norm
-% normtypeY 	norm for Y view 1 = l1 norm and 2 = l2 norm (default)
-% Rep           number of repetitions from random initializations
-% eps           convergence threshold
-% sigma1        the std of the rbf kernel, if empty = median heuristic
-% sigma2        the std of the rbf kernel, if empty = median heuristic
+%
+% hyperparams structure with the following fields
+% .M            number of components
+% .normtypeX 	norm for X view 1 = l1 (default) and 2 = l2
+% .normtypeY 	norm for Y view 1 = l1 and 2 = l2 (default)
+% .Cx           the value of the norm constraint on view X
+% .Cy           the value of the norm constraint on view Y
+% .Rep          number of repetitions from random initializations
+% .eps          convergence threshold
+% .sigma1       the std of the rbf kernel, if empty = median heuristic
+% .sigma2       the std of the rbf kernel, if empty = median heuristic
+% .maxit        maximum iteration limit
+% .flag         print iteration results, yes = 1
 
 % Output:
 % U             canonical coefficient vectors for X in the columns of U
@@ -40,6 +46,8 @@ Rep = hyperparams.Rep;
 eps = hyperparams.eps;
 sigma1 = hyperparams.sigma1;
 sigma2 = hyperparams.sigma2;
+maxit = hyperparams.maxit;
+flag = hyperparams.flag;
 
 rng(5) % fix the random number generator
 
@@ -80,15 +88,14 @@ Ym = Ytrain;
 dx = size(Xm,2);
 dy = size(Ym,2);
 
-maxit = 500;
 if size(Xm,1) ~= size(Ym,1)
-    printf('size of data matrix are not same');
+    printf('sizes of data matrices are not same');
 end
 
 InterMediate = [];
 for m=1:M
     for rep=1:Rep
-        fprintf('Reps: #%d \n',rep);        
+        %fprintf('Reps: #%d \n',rep);        
         % intialization
         if normtypeX==1
          umr = projL1(rand(dx,1),Cx);
@@ -212,10 +219,11 @@ for m=1:M
             test_obj = f(Kxtest,Kytest);
             
             %% compute the delta
-            diff = abs(obj - obj_old) / abs(obj + obj_old);            
-            disp(['iter = ',num2str(ite),', objtr = ',num2str(obj),...
-                ', diff = ', num2str(diff), ...
-                ', test = ', num2str(test_obj)])
+            diff = abs(obj - obj_old) / abs(obj + obj_old);   
+            
+            if flag == 1
+                disp(['iter = ',num2str(ite),', objtr = ',num2str(obj),', diff = ', num2str(diff), ', test = ', num2str(test_obj)])
+            end
         end
         InterMediate(m,rep).Result.u = umr;
         InterMediate(m,rep).Result.v = vmr;

@@ -27,14 +27,13 @@ Ytrain = Y(train,:); Ytest = Y(test,:);
 hyperparams.M = 1; % number of components/relations
 hyperparams.normtypeX = 1; % the norm on X view
 hyperparams.normtypeY = 1; % the norm on Y view
-hyperparams.App_para = 0.1; % percentage of inducing variables for Nyström
+hyperparams.proportion = 0.1; % percentage of inducing variables for Nyström
 hyperparams.Cx = 1; % the value of the norm on X view
 hyperparams.Cy = 1; % the value of the norm on Y view
 hyperparams.Rep = 3; % number of restarts of the algorithm
 hyperparams.eps = 1e-8; % stopping criterion
 hyperparams.sigma1 = []; % std of Gaussian kernel on X view
 hyperparams.sigma2 = []; % std of Gaussian kernel on Y view
-hyperparams.grad = 'minibatch'; % type of gradient
 hyperparams.maxit = 30; % maximum number of iterations
 
 %% train the scca-hsic model

@@ -13,15 +13,8 @@ function [X,Y] = generate_data(n,p,q,numx,type)
 %                               4   exponential
 %                               5   logarithmic
 
-X = zeros(n,p);
-for i = 1:p
-    X(:,i) = rand([n,1]);
-end
-
-Y = zeros(n,q);
-for j = 1:q
-    Y(:,j) = rand([n,1]);
-end
+X = rand(n,p);
+Y = rand(n,q);
 
 xvar = zeros(size(X,1),1);
 if numx >= 2
