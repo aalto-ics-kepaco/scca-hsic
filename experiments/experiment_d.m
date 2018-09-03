@@ -1,25 +1,28 @@
-%% Experiment C(III): Scalability
-%
+%% Experiment D: Scalability
+
+%--------------------------------------------------------------------------
+% Uurtio, V., Bhadra, S., Rousu, J. 
+% Sparse Non-Linear CCA through Hilbert-Schmidt Independence Criterion. 
+% IEEE International Conference on Data Mining (ICDM 2018)
+%--------------------------------------------------------------------------
 
 clear
 
-% SCCA-HSIC_Nys
+% Hyperparameters SCCA-HSIC-Nys
 hyperparams.M = 1; % number of components/relations
 hyperparams.normtypeX = 1; % the norm on X view
 hyperparams.normtypeY = 1; % the norm on Y view
-hyperparams.Cx = 1; % the value of the norm on X view
-hyperparams.Cy = 1; % the value of the norm on Y view
-hyperparams.Rep = 7; % number of restarts of the algorithm
+hyperparams.Rep = 3; % number of restarts of the algorithm
 hyperparams.eps = 1e-8; % stopping criterion
 hyperparams.sigma1 = []; % std of Gaussian kernel on X view
 hyperparams.sigma2 = []; % std of Gaussian kernel on Y view
-hyperparams.maxit = 60; % maximum number of iterations
-hyperparams.flag = 1;
+hyperparams.maxit = 50; % maximum number of iterations
+hyperparams.flag = 2;
 
 % data dimensions
 p = 20; % number of variables in view X
 q = 20; % number of variables in view Y
-n = [100,500,1000,5000,10000]; % sample size
+n = [100,500,1000,5000,10000,50000]; % sample size
 props = [1, 1, 0.5, 0.1, 0.05, 0.01];
 
 % test setting
@@ -50,8 +53,8 @@ for ff = 1:length(func)
         [X,Y] = generate_data(n(ll),p,q,indeps,func);
         
         % tune hyperparameters for a random sample from this dataset
-        rsamp = randsample(size(X,1), round(0.3 * size(X,1)));
-        c1 = 0.5:0.5:2.5; c2 = 0.5:0.5:2.5;
+        rsamp = randsample(size(X,1), round(props(ll) * size(X,1)));
+        c1 = 0.5:0.5:3; c2 = 0.5:0.5:3;
         [c1_1,c2_1] = tune_hypers(X(rsamp,:),Y(rsamp,:),'scca-hsic-nystrom',3,c1,c2);
                        
         for rep = 1:repss           
@@ -72,8 +75,8 @@ for ff = 1:length(func)
             % run SCCA-HSIC at the optimal hyperparameters
             hyperparams.Cx = c1_1; hyperparams.Cy = c2_1;
             tic;
-            [u1,v1,hsic_train] = scca_hsic(Xtrain,Ytrain,hyperparams);
-            result(ff,1).time = toc;
+            [u1,v1,hsic_train] = scca_hsic_nystrom(Xtrain,Ytrain,hyperparams);
+            result(ff,1).time(ll) = toc/60;
             
             % test hsic
             Kxtest = rbf_kernel(Xtest * u1);

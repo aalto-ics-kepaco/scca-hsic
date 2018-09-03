@@ -229,6 +229,10 @@ for m=1:M
         InterMediate(m,rep).Result.v = vmr;
         InterMediate(m,rep).Result.obj = obj;
         tempobj(rep) = obj;
+        
+        if flag == 2
+            disp(['Rep ', num2str(rep), ', Objective = ',num2str(obj,2)])
+        end
     end
     
     [~,id] = max(tempobj);
