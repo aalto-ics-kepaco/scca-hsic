@@ -1,10 +1,10 @@
 function [U,V,final_obj,tempobj,InterMediate] = scca_hsic(X,Y,hyperparams)
 
 % The SCCA-HSIC implementation using the projected stochastic mini-batch
-% gradient ascent. 
+% gradient ascent.
 
 % Input:
-% X             n x dx data matrix 
+% X             n x dx data matrix
 % Y             n x dy data matrix
 %
 % hyperparams structure with the following fields
@@ -22,7 +22,7 @@ function [U,V,final_obj,tempobj,InterMediate] = scca_hsic(X,Y,hyperparams)
 
 % Output:
 % U             canonical coefficient vectors for X in the columns of U
-% V             canonical coefficient vectors for Y in the columns of V 
+% V             canonical coefficient vectors for Y in the columns of V
 
 % InterMediate is a structure containing all intermediate results
 % InterMediate(m,rep).u  contains all intermediate u for mth component
@@ -31,8 +31,8 @@ function [U,V,final_obj,tempobj,InterMediate] = scca_hsic(X,Y,hyperparams)
 
 
 %--------------------------------------------------------------------------
-% Uurtio, V., Bhadra, S., Rousu, J. 
-% Sparse Non-Linear CCA through Hilbert-Schmidt Independence Criterion. 
+% Uurtio, V., Bhadra, S., Rousu, J.
+% Sparse Non-Linear CCA through Hilbert-Schmidt Independence Criterion.
 % IEEE International Conference on Data Mining (ICDM 2018)
 %--------------------------------------------------------------------------
 %% Set up parameters
@@ -68,11 +68,11 @@ if ~exist('normtypeY', 'var') || isempty(normtypeY)
 end
 
 if ~exist('Cx', 'var') || isempty(Cx)
-  Cx = 1; % default regularization constant for X
+    Cx = 1; % default regularization constant for X
 end
 
 if ~exist('Cy', 'var') || isempty(Cy)
-  Cy = 1; % default regularization constant for Y
+    Cy = 1; % default regularization constant for Y
 end
 
 
@@ -95,13 +95,13 @@ end
 InterMediate = [];
 for m=1:M
     for rep=1:Rep
-        %fprintf('Reps: #%d \n',rep);        
+        %fprintf('Reps: #%d \n',rep);
         % intialization
         if normtypeX==1
-         umr = projL1(rand(dx,1),Cx);
+            umr = projL1(rand(dx,1),Cx);
         end
         if normtypeX==2
-          umr = projL2(rand(dx,1),Cx);
+            umr = projL2(rand(dx,1),Cx);
         end
         if normtypeY==1
             vmr = projL1(rand(dy,1),Cy);
@@ -111,7 +111,7 @@ for m=1:M
         end
         Xu = Xm * umr;
         Yv = Ym * vmr;
-
+        
         % kernel for view x
         if isempty(sigma1)
             [Ku,au] = rbf_kernel(Xu);
@@ -124,19 +124,19 @@ for m=1:M
         else
             [Kv,av] = rbf_kernel(Yv,sigma2);
         end
-
+        
         cKu = centre_kernel(Ku);
         cKv = centre_kernel(Kv);
         diff = 999999;
         ite = 0;
         
         while diff > eps && ite < maxit
-            ite = ite + 1;               
-            obj_old = f(Ku,cKv);  
-            gradu = gradf_gauss_SGD(Ku,cKv,Xm,au,umr); 
+            ite = ite + 1;
+            obj_old = f(Ku,cKv);
+            gradu = gradf_gauss_SGD(Ku,cKv,Xm,au,umr);
             
             %% line search for u
-            gamma = norm(gradu,2); % initial step size           
+            gamma = norm(gradu,2); % initial step size
             chk = 1;
             while chk == 1
                 if normtypeX == 1
@@ -151,7 +151,7 @@ for m=1:M
                 else
                     [Ku_new,au_new] = rbf_kernel(Xm * umr_new,sigma1);
                 end
-
+                
                 obj_new = f(Ku_new,cKv);
                 
                 if obj_new > obj_old + 1e-4*abs(obj_old)
@@ -177,7 +177,7 @@ for m=1:M
             obj_old = obj;
             gradv = gradf_gauss_SGD(Kv,cKu,Ym,av,vmr);
             %% line search for v
-            gamma = norm(gradv,2); % initial step size             
+            gamma = norm(gradv,2); % initial step size
             chk = 1;
             while chk == 1
                 if normtypeY == 1
@@ -186,13 +186,13 @@ for m=1:M
                 if normtypeY == 2
                     vmr_new  = projL2(vmr + gradv * gamma,Cy);
                 end
-
+                
                 if isempty(sigma2)
                     [Kv_new,av_new] = rbf_kernel(Ym * vmr_new);
                 else
                     [Kv_new,av_new] = rbf_kernel(Ym * vmr_new, sigma2);
                 end
-
+                
                 cKv_new = centre_kernel(Kv_new);
                 obj_new = f(Ku,cKv_new);
                 if obj_new > obj_old + 1e-4*abs(obj_old)
@@ -205,21 +205,21 @@ for m=1:M
                 else
                     gamma = gamma/2;
                     if gamma <1e-7
-                        chk = 0;    
+                        chk = 0;
                     end
                 end
             end
             obj = obj_new;
             InterMediate(m,rep).v(:,ite) = vmr;
-            InterMediate(m,rep).obj(2*ite) = obj;            
-            %% line search end            
+            InterMediate(m,rep).obj(2*ite) = obj;
+            %% line search end
             %% check the value of test objective
             Kxtest = rbf_kernel(Xtest * umr);
             Kytest = centre_kernel(rbf_kernel(Ytest * vmr));
             test_obj = f(Kxtest,Kytest);
             
             %% compute the delta
-            diff = abs(obj - obj_old) / abs(obj + obj_old);   
+            diff = abs(obj - obj_old) / abs(obj + obj_old);
             
             if flag == 1
                 disp(['iter = ',num2str(ite),', objtr = ',num2str(obj),', diff = ', num2str(diff), ', test = ', num2str(test_obj)])

@@ -29,11 +29,10 @@ hyperparams.Rep = 5;
 hyperparams.eps = 1e-7;
 hyperparams.sigma1 = [];
 hyperparams.sigma2 = [];
-hyperparams.maxit = 500;
 hyperparams.flag = 2;
 
 % train an scca-hsic model
-[u,v,hsic_train,tempobj,InterMediate] = scca_hsic(Xtrain,Ytrain,hyperparams);
+[u,v,hsic_train,tempobj,InterMediate] = scca_hsic2(Xtrain,Ytrain,hyperparams);
 
 % test the scca-hsic model 
 Kxtest = rbf_kernel(Xtest * u);
