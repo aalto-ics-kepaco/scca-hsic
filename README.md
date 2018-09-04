@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sparse Non-Linear CCA through Hilbert-Schmidt Independence Criterion
 
 This repository contains the MATLAB codes applied in the experiments of [1].
@@ -37,3 +38,7 @@ Independence Criterion. IEEE International Conference on Data Mining
 
 
 
+=======
+# scca-hsic
+MATLAB codes
+>>>>>>> 9121d0a5acd9867afd4c3811655012ee57a4c25c
