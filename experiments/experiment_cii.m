@@ -23,7 +23,7 @@ n = 300;
 
 % setting
 indeps = 3;
-func = 1:5;
+func = 4:5;
 repss = 1;
 methods = {'scca-hsic','cca-hsic'};
 
@@ -33,6 +33,7 @@ result(length(func),length(methods)).u = [];
 result(length(func),length(methods)).v = [];
 result(length(func),length(methods)).hsic_test = [];
 result(length(func),length(methods)).f1 = [];
+result(length(func),length(methods)).ground = [];
 
 
 for ff = 1:length(func)
@@ -66,7 +67,7 @@ for ff = 1:length(func)
                 Yground = Y(test,1) + Y(test,2);
                 Kxground = rbf_kernel(Xground);
                 Kyground = centre_kernel(rbf_kernel(Yground));
-                hsic_ground(ff,ll,rep,mm) = f(Kxground,Kyground);
+                result(ff,mm).ground(ll,rep) = f(Kxground,Kyground);
                 
                 hyperparams.Cx = c1_1; hyperparams.Cy = c2_1;
                 if mm == 1
@@ -96,38 +97,9 @@ for i = 1:length(func)
     for j = 1:length(methods)
         F1_mean(i,:,j) = mean(result(i,j).f1,2);
         HSIC_mean(i,:,j) = mean(result(i,j).hsic_test,2);
+        ground_mean(i,:,j) = mean(result(i,j).ground,2);
     end
 end
-
-%%  visualise
-marks = 's:';
-figure
-subplot(121)
-hold on
-h1 = plot(mean(mean(hsic_ground,3)),'k--');
-h2 = errorbar(mean(HSIC_mean),std(HSIC_mean),marks,'MarkerSize',20,'MarkerEdgeColor','auto','MarkerFaceColor','none','linewidth',2);
-set(gca,'xtick',1:4,'xticklabel',[10,20,30,40],'fontweight','bold','fontsize',16)
-xlabel('Noise Variables')
-ylabel('Test HSIC')
-box on
-axis square
-ylim([0 0.085])
-
-set(findobj(gca,'type','line'),'linew',2)
-set(gca,'linew',2)
-
-subplot(122)
-hold on
-errorbar(mean(F1_mean),std(F1_mean),marks,'MarkerSize',15,'MarkerEdgeColor','auto','MarkerFaceColor','none',...
-    'linewidth',2)
-ylim([0 1])
-set(gca,'xtick',1:4,'xticklabel',[10,20,30,40],'fontweight','bold','fontsize',14)
-xlabel('Noise Variables')
-ylabel('F1')
-box on
-set(findobj(gca,'type','line'),'linew',2)
-set(gca,'linew',2)
-axis square
 
 
 
