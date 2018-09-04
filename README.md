@@ -1,2 +1,0 @@
-# scca-hsic
-MATLAB codes
