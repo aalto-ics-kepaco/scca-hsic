@@ -30,8 +30,6 @@ hyperparams2.sigma2 = [];
 hyperparams2.maxit = 500;
 hyperparams2.flag = 2;
 
-% KCCA
-
 % data dimensions
 p = 20;
 q = 20;
@@ -53,9 +51,6 @@ for ff = 1:length(func)
     rng('shuffle')
     
     [X,Y] = gendata2(n,p,q,func(ff));
-    
-    % standardise
-    %Xn = zscore(X); Yn = zscore(Y);
     Xn = X; Yn = Y;
     [~,indices] = partition(size(X,1), 3);
     train = indices ~= 1; test = indices == 1;

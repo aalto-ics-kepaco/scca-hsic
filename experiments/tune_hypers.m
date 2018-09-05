@@ -13,8 +13,8 @@ rep_hsic = zeros(size(a,2),size(b,2),repeats);
 for rep = 1:repeats % repetitions of cv
     disp(['REP ' num2str(rep)])
     X = zscore(X); Y = zscore(Y); % standardise
-    [~,indices] = partition(size(X,1), folds); % partition
     rng('shuffle')
+    [~,indices] = partition(size(X,1), folds); % partition
     
     for aa = 1:size(a,2)
         for bb = 1:size(b,2)
@@ -25,19 +25,20 @@ for rep = 1:repeats % repetitions of cv
                 Xtrain = X(train,:); Xtest = X(test,:);
                 Ytrain = Y(train,:); Ytest = Y(test,:);
                 
+                hyperparams.M = 1;
+                hyperparams.Cx = a(aa);
+                hyperparams.Cy = b(bb);
+                hyperparams.Rep = 8;
+                hyperparams.eps = 1e-7;
+                hyperparams.sigma1 = [];
+                hyperparams.sigma2 = [];
+                hyperparams.maxit = 500;
+                hyperparams.flag = 0;
+                
                 switch method
                     case 'scca-hsic'
-                        hyperparams.M = 1;
                         hyperparams.normtypeX = 1;
                         hyperparams.normtypeY = 1;
-                        hyperparams.Cx = a(aa);
-                        hyperparams.Cy = b(bb);
-                        hyperparams.Rep = 8;
-                        hyperparams.eps = 1e-7;
-                        hyperparams.sigma1 = [];
-                        hyperparams.sigma2 = [];
-                        hyperparams.maxit = 500;
-                        hyperparams.flag = 0;
                         [u,v] = scca_hsic(Xtrain,Ytrain,hyperparams);
                         Kxtest = rbf_kernel(Xtest * u);
                         Kytest = centre_kernel(rbf_kernel(Ytest * v));
@@ -60,17 +61,8 @@ for rep = 1:repeats % repetitions of cv
                         Kytest = centre_kernel(rbf_kernel(Ytest * v));
                         
                     case 'cca-hsic'
-                        hyperparams.M = 1;
                         hyperparams.normtypeX = 2;
                         hyperparams.normtypeY = 2;
-                        hyperparams.Cx = a(aa);
-                        hyperparams.Cy = b(bb);
-                        hyperparams.Rep = 8;
-                        hyperparams.eps = 1e-7;
-                        hyperparams.sigma1 = [];
-                        hyperparams.sigma2 = [];
-                        hyperparams.maxit = 500;
-                        hyperparams.flag = 0;
                         [u,v] = scca_hsic(Xtrain,Ytrain,hyperparams);
                         Kxtest = rbf_kernel(Xtest * u);
                         Kytest = centre_kernel(rbf_kernel(Ytest * v));
