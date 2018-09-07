@@ -22,9 +22,9 @@ q = 10:10:40;
 n = 300;
 
 % setting
-indeps = 3;
-func = 4:5;
-repss = 2;
+indeps = 3; % number of related variables in view X
+func = 1:5; % test all five relations
+repss = 10; % number of repetitions
 methods = {'scca-hsic','cca-hsic'};
 
 % preallocate

@@ -24,8 +24,8 @@ n = 300; % sample size
 
 % test setting
 indeps = 1:4; % number of independent variables in view X
-func = 4:5; % test all five relations
-repss = 3;
+func = 1:5; % test all five relations
+repss = 10; % number of repetitions
 methods = {'scca-hsic','cca-hsic'};
 
 % preallocate
@@ -101,12 +101,12 @@ for ff = 1:length(func)
 end
 
 %% averages over the repetitions
-for i = 1:length(func)
-    for j = 1:length(methods)
-        F1_mean(i,:,j) = mean(result(i,j).f1,2);
-        HSIC_mean(i,:,j) = mean(result(i,j).hsic_test,2);
-        ground_mean(i,:,j) = mean(result(i,j).ground,2);
-    end
+for jj = 1:length(methods)
+    F1_mean(:,jj) = mean([result(1:length(func),jj).f1],2);
+    F1_std(:,jj) = std([result(1:length(func),jj).f1],0,2);
+    HSIC_mean(:,jj) = mean([result(1:length(func),jj).hsic_test],2);
+    HSIC_std(:,jj) = std([result(1:length(func),jj).hsic_test],0,2);
+    ground_mean(:,jj) = mean([result(1:length(func),jj).ground],2);
 end
 
 %% visualise
@@ -115,8 +115,8 @@ marks = 's:';
 figure
 subplot(121)
 hold on
-h1 = plot(mean(mean(hsic_ground,3)),'k--');
-h2 = errorbar(mean(HSIC_mean),std(HSIC_mean),marks,'MarkerSize',20,'MarkerEdgeColor','auto','MarkerFaceColor','none','linewidth',2);
+h1 = plot(mean(ground_mean,2),'k--');
+h2 = errorbar(HSIC_mean,HSIC_std,marks,'MarkerSize',20,'MarkerEdgeColor','auto','MarkerFaceColor','none','linewidth',2);
 set(gca,'xtick',1:4,'xticklabel',[3,4,5,6],'fontweight','bold','fontsize',16)
 xlabel('Related Variables')
 ylabel('Test HSIC')
@@ -127,9 +127,18 @@ ylim([0 0.1])
 set(findobj(gca,'type','line'),'linew',2)
 set(gca,'linew',2)
 
+[l,b] = legend({'Ground Truth','SCCA-HSIC','CCA-HSIC'},...
+   'location','eastoutside',...
+   'orientation','horizontal','fontsize',17,'fontname','times');
+set(findobj(b,'-property','MarkerSize'),'MarkerSize',25)
+hl = findobj(b,'type','line');
+set(hl,'LineWidth',2);
+legend boxoff
+set(l,'Position', [0.27 0.75 0.45 0.2], 'Units', 'normalized');
+
 subplot(122)
 hold on
-errorbar(mean(F1_mean),std(F1_mean),marks,'MarkerSize',15,'MarkerEdgeColor','auto','MarkerFaceColor','none',...
+errorbar(F1_mean,F1_std,marks,'MarkerSize',15,'MarkerEdgeColor','auto','MarkerFaceColor','none',...
     'linewidth',2)
 ylim([0 1])
 set(gca,'xtick',1:4,'xticklabel',[3,4,5,6],'fontweight','bold','fontsize',16)
