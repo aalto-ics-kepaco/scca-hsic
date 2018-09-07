@@ -100,7 +100,7 @@ for ff = 1:length(func)
     end
 end
 
-% averages over the repetitions
+%% averages over the repetitions
 for i = 1:length(func)
     for j = 1:length(methods)
         F1_mean(i,:,j) = mean(result(i,j).f1,2);

@@ -24,7 +24,7 @@ n = 300;
 % setting
 indeps = 3;
 func = 4:5;
-repss = 1;
+repss = 2;
 methods = {'scca-hsic','cca-hsic'};
 
 % preallocate
@@ -50,8 +50,8 @@ for ff = 1:length(func)
             
             % tune hyperparameters for a random sample from this dataset
             rsamp = randsample(size(X,1), round(0.4 * size(X,1)));
-            c1 = 0.5:0.5:2.5; c2 = 0.5:0.5:2.5;
-            [c1_1,c2_1] = tune_hypers(X(rsamp,:),Y(rsamp,:),methods{mm},5,c1,c2);
+            c1 = 0.5:0.5:3; c2 = 0.5:0.5:3;
+            [c1_1,c2_1] = tune_hypers(X(rsamp,:),Y(rsamp,:),methods{mm},3,c1,c2);
             
             
             for rep = 1:repss
@@ -92,14 +92,54 @@ for ff = 1:length(func)
     end
 end
 
-% averages over the repetitions
-for i = 1:length(func)
-    for j = 1:length(methods)
-        F1_mean(i,:,j) = mean(result(i,j).f1,2);
-        HSIC_mean(i,:,j) = mean(result(i,j).hsic_test,2);
-        ground_mean(i,:,j) = mean(result(i,j).ground,2);
-    end
+%% averages over the repetitions and functions
+for jj = 1:length(methods)
+    F1_mean(:,jj) = mean([result(1:length(func),jj).f1],2);
+    F1_std(:,jj) = std([result(1:length(func),jj).f1],0,2);
+    HSIC_mean(:,jj) = mean([result(1:length(func),jj).hsic_test],2);
+    HSIC_std(:,jj) = std([result(1:length(func),jj).hsic_test],0,2);
+    ground_mean(:,jj) = mean([result(1:length(func),jj).ground],2);
 end
+
+%% visualise
+marks = 's:';
+figure
+subplot(121)
+hold on
+h1 = plot(mean(ground_mean,2),'k--');
+h2 = errorbar(HSIC_mean,HSIC_std,marks,'MarkerSize',20,'MarkerEdgeColor','auto','MarkerFaceColor','none','linewidth',2);
+set(gca,'xtick',1:4,'xticklabel',[3,4,5,6],'fontweight','bold','fontsize',16)
+xlabel('Noise Variables')
+ylabel('Test HSIC')
+box on
+axis square
+ylim([0 0.1])
+
+set(findobj(gca,'type','line'),'linew',2)
+set(gca,'linew',2)
+
+[l,b] = legend({'Ground Truth','SCCA-HSIC','CCA-HSIC'},...
+   'location','eastoutside',...
+   'orientation','horizontal','fontsize',17,'fontname','times');
+set(findobj(b,'-property','MarkerSize'),'MarkerSize',25)
+hl = findobj(b,'type','line');
+set(hl,'LineWidth',2);
+legend boxoff
+set(l,'Position', [0.27 0.75 0.45 0.2], 'Units', 'normalized');
+
+subplot(122)
+hold on
+errorbar(F1_mean,F1_std,marks,'MarkerSize',15,'MarkerEdgeColor','auto','MarkerFaceColor','none',...
+    'linewidth',2)
+ylim([0 1])
+set(gca,'xtick',1:4,'xticklabel',[3,4,5,6],'fontweight','bold','fontsize',16)
+xlabel('Noise Variables')
+ylabel('F1')
+box on
+set(findobj(gca,'type','line'),'linew',2)
+set(gca,'linew',2)
+axis square
+
 
 
 
