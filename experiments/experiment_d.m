@@ -70,7 +70,7 @@ for ff = 1:length(func)
             Yground = Y(test,1) + Y(test,2);            
             Kxground = rbf_kernel(Xground);
             Kyground = centre_kernel(rbf_kernel(Yground));
-            hsic_ground(ff,ll,rep) = f(Kxground,Kyground);
+            result(ff,1).ground(ll,rep) = f(Kxground,Kyground);
             
             % run SCCA-HSIC at the optimal hyperparameters
             hyperparams.Cx = c1_1; hyperparams.Cy = c2_1;
