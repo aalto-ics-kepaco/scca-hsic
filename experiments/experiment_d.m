@@ -22,8 +22,8 @@ hyperparams.flag = 2;
 % data dimensions
 p = 20; % number of variables in view X
 q = 20; % number of variables in view Y
-n = [100,500,1000,5000,10000,50000]; % sample size
-props = [1, 1, 0.5, 0.1, 0.05, 0.01];
+n = [500,1000,5000,10000,50000]; % sample size
+props = [1, 0.5, 0.1, 0.05, 0.01];
 
 % test setting
 indeps = 3; % number of independent variables in view X
@@ -99,6 +99,18 @@ for i = 1:length(func)
     F1_mean(i,:) = mean(result(i,1).f1,2);
     HSIC_mean(i,:) = mean(result(i,1).hsic_test,2);
 end
+
+%% visualise
+figure
+plot([result.time/60],'s','markersize',12)
+xlabel('sample size')
+ylabel('time (hours)')
+set(gca,'xtick',1:length(n),'xticklabel',n)
+set(gca,'FontSize',15,'fontweight','bold')
+set(findobj(gca,'type','line'),'linew',2)
+set(gca,'linew',2)
+set(gca, 'YScale', 'log')
+
 
 
 

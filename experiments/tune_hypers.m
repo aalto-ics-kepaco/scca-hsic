@@ -1,4 +1,17 @@
-function [c1_opt,c2_opt,hsic_final] = tune_hypers(X,Y,method,repeats,a,b)
+function [c1_opt,c2_opt] = tune_hypers(X,Y,method,repeats,a,b)
+
+% Tuning the hyperparameters, i.e. the L1 norm constraints.
+
+% Input
+%       X: The view X
+%       Y: The view Y
+%       method: 'scca-hsic','scca-hsic-nystrom','cca-hsic'
+%       repeats: repetitions of cross-validation
+%       a: the set of hyperparameter values for view X
+%       b: the set of hyperparameter values for view Y
+% Output
+%       c1_opt: the optimal hyperparamer for X
+%       c2_opt: the optimal hyperparamer for Y
 
 %--------------------------------------------------------------------------
 % Uurtio, V., Bhadra, S., Rousu, J. 
