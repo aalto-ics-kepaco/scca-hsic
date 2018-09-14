@@ -24,7 +24,7 @@ n = 300; % sample size
 
 % test setting
 indeps = 1:4; % number of independent variables in view X
-func = 1:5; % test all five relations
+func = 4:5; % test all five relations
 repss = 10; % number of repetitions
 methods = {'scca-hsic','cca-hsic'};
 
@@ -47,13 +47,7 @@ for ff = 1:length(func)
             
             % generate data
             rng('shuffle')
-            [X,Y] = generate_data(n,p,q,indeps(ll),func(ff));
-            
-            % tune hyperparameters for a random sample from this dataset
-            rsamp = randsample(size(X,1), round(0.4 * size(X,1)));
-            c1 = 0.5:0.5:2.5; c2 = 0.5:0.5:2.5;
-            [c1_1,c2_1] = tune_hypers(X(rsamp,:),Y(rsamp,:),methods{mm},5,c1,c2);
-            
+            [X,Y] = generate_data(n,p,q,indeps(ll),func(ff));            
             
             for rep = 1:repss
                 % standardise and partition
@@ -62,6 +56,9 @@ for ff = 1:length(func)
                 train = indices ~= 1; test = indices == 1;
                 Xtrain = Xn(train,:); Xtest = Xn(test,:);
                 Ytrain = Yn(train,:); Ytest = Yn(test,:);
+                
+                c1 = 0.5:0.5:2.5; c2 = 0.5:0.5:2.5;
+                [c1_1,c2_1] = tune_hypers(Xtrain,Ytrain,methods{mm},5,c1,c2);
                 
                 xvar = zeros(size(Xtest,1),1);
                 if indeps(ll) >= 2

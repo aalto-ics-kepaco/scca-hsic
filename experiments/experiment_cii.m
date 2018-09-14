@@ -46,13 +46,7 @@ for ff = 1:length(func)
             
             % generate data
             rng('shuffle')
-            [X,Y] = generate_data(n,p(ll),q(ll),3,func(ff));
-            
-            % tune hyperparameters for a random sample from this dataset
-            rsamp = randsample(size(X,1), round(0.4 * size(X,1)));
-            c1 = 0.5:0.5:3; c2 = 0.5:0.5:3;
-            [c1_1,c2_1] = tune_hypers(X(rsamp,:),Y(rsamp,:),methods{mm},3,c1,c2);
-            
+            [X,Y] = generate_data(n,p(ll),q(ll),3,func(ff));           
             
             for rep = 1:repss
                 % standardise and partition
@@ -61,6 +55,9 @@ for ff = 1:length(func)
                 train = indices ~= 1; test = indices == 1;
                 Xtrain = Xn(train,:); Xtest = Xn(test,:);
                 Ytrain = Yn(train,:); Ytest = Yn(test,:);
+                
+                c1 = 0.5:0.5:3; c2 = 0.5:0.5:3;
+                [c1_1,c2_1] = tune_hypers(Xtrain,Ytrain,methods{mm},5,c1,c2);
                 
                 % compute ground truth
                 Xground = X(test,1) + X(test,2) + X(test,3);
