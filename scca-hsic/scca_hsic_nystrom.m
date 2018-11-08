@@ -48,6 +48,7 @@ eps = hyperparams.eps;
 sigma1 = hyperparams.sigma1;
 sigma2 = hyperparams.sigma2;
 maxit = hyperparams.maxit;
+flag = hyperparams.flag;
 
 % partition into training and validation sets
 [~,indices] = partition(size(X,1), 3);

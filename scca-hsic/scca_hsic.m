@@ -18,7 +18,8 @@ function [U,V,final_obj,tempobj,InterMediate] = scca_hsic(X,Y,hyperparams)
 % .sigma1       the std of the rbf kernel, if empty = median heuristic
 % .sigma2       the std of the rbf kernel, if empty = median heuristic
 % .maxit        maximum iteration limit
-% .flag         print iteration results, yes = 1
+% .flag         print iteration results, 1: yes, 2: only the converged
+%               result
 
 % Output:
 % U             canonical coefficient vectors for X in the columns of U
@@ -97,16 +98,16 @@ for m=1:M
     for rep=1:Rep
         %fprintf('Reps: #%d \n',rep);
         % intialization
-        if normtypeX==1
+        if normtypeX == 1
             umr = projL1(rand(dx,1),Cx);
         end
-        if normtypeX==2
+        if normtypeX == 2
             umr = projL2(rand(dx,1),Cx);
         end
-        if normtypeY==1
+        if normtypeY == 1
             vmr = projL1(rand(dy,1),Cy);
         end
-        if normtypeY==2
+        if normtypeY == 2
             vmr = projL2(rand(dy,1),Cy);
         end
         Xu = Xm * umr;
